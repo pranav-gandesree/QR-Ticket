@@ -195,17 +195,17 @@ const TicketForm = () => {
   const theme = useTheme();
   const [priceId, setPriceId] = useState('');
 
- 
-  const generatePriceId = () => {
-    const randomPriceId = uuidv4();
-    setPriceId(randomPriceId);
-};
+
+
     const makePayment = (token) => {
 
-      if (!priceId) {
-        console.error('PriceId not generated');
-        return;
-    }
+      if (true) {
+        // Redirect to /qrcode after 6 seconds
+        setTimeout(() => {
+          window.location.href = '/qrcode';
+        }, 6000);
+
+      }
 
     const body = {
       token,
@@ -235,6 +235,7 @@ const TicketForm = () => {
       .catch((error) => {
         console.error("Fetch Error:", error);
       });
+
   };
 
   const [price, setPrice] = useState(0);
@@ -246,8 +247,19 @@ const TicketForm = () => {
 
 
   useEffect(() => {
-    // You can fetch menu items from an API here if needed
-  }, []);
+      // const randomNumber = Math.floor(Math.random() * 10000);
+      // const timestamp = Date.now();
+      // const priceId = `${timestamp}_${randomNumber}`;
+
+          const randomPriceId = uuidv4();
+    setPriceId(randomPriceId);
+
+  
+      // Update the state with the generated priceId
+      console.log(priceId);
+      // setPriceId(priceId);
+
+  }, [price]);
 
   const handleStartLocationChange = (e) => {
     setStartLocation(e.target.value);

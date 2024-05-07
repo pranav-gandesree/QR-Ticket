@@ -43,7 +43,7 @@ const QRCodeDisplay = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
-    axios.post('http://localhost:1111/generate-qr-code', { data: 'Your QR Code Data' })
+    axios.post('http://localhost:1111/generate-qr-code', { data: 'Ticket confirm' })
       .then(response => {
         if (response.data.success) {
           setQRCodeData(response.data.imagePath);

@@ -26,8 +26,9 @@ app.get("/", (req, res) => {
 })
 
 app.post("/payment", async(req,res)=>{
-    const {price, token, priceId} = req.body;
+    const {price, token} = req.body;
 
+    const priceId = uuidv4();
 
     console.log("price",price);
     console.log("priceId", priceId);
@@ -36,7 +37,7 @@ app.post("/payment", async(req,res)=>{
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
-          price: priceId, 
+          // price: price, 
           quantity: 1,
         },
       ],
