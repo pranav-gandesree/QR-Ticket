@@ -78,7 +78,7 @@ const TicketForm = () => {
           return;
       }
       try {
-          const { data: { id } } = await axios.post('http://localhost:1111/create-checkout-session', {
+          const { data: { id } } = await axios.post('https://qr-ticket.onrender.com/create-checkout-session', {
               items: [
                   { 
                       name: `${startPlace} to ${endPlace}`, 
