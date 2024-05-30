@@ -11,3 +11,18 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+
+.navbar{
+  cursor: pointer;
+  margin-left: -280px;
+}
+
+.qr-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh; /* Set container height to full viewport height */
+}
+

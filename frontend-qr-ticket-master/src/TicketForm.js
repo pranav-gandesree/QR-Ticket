@@ -1,313 +1,98 @@
-// import React, { useState, useEffect } from 'react';
-// import { Grid, FormControl, InputLabel, Select, MenuItem, Button, TextField } from '@mui/material';
-// import { useTheme } from '@mui/material/styles';
-// import { toast, ToastContainer } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css';
-// import menuItems from './menuItems.json';
-
-// import StripeCheckout from "react-stripe-checkout"
-
-
-
-// const TicketForm = () => {
-//   const theme = useTheme();
-
-//   const [price, setPrice] = useState();
-
-
-//   const makePayment = (token) => {
-//     const body = {
-//       token,
-//       price,
-//     };
-//     const headers = {
-//       "Content-Type": "application/json",
-//     };
-
-//     fetch(`http://localhost:1111/payment`, {
-//       method: "POST",
-//       headers,
-//       body: JSON.stringify(body),
-//     })
-//       .then((response) => {
-//         if (!response.ok) {
-//           throw new Error("Network response was not ok");
-//         }
-//         return response.json();
-//       })
-//       .then((data) => {
-//         console.log("RESPONSE", data);
-//         const { status } = data;
-//         console.log("status:", status);
-//       })
-//       .catch((error) => {
-//         console.error("Fetch Error:", error);
-//       });
-//   };
-
-
-// const [startLocation, setStartLocation] = useState('');
-// const [destination, setDestination] = useState('');
-// const [numTickets, setNumTickets] = useState(1);
-
-// useEffect(() => {
-//   // You can fetch menu items from an API here if needed
-// }, []);
-
-// const handleStartLocationChange = (e) => {
-//   setStartLocation(e.target.value);
-// };
-
-// const handleDestinationChange = (e) => {
-//   setDestination(e.target.value);
-  
-// };
-
-// const handleNumTicketsChange = (e) => {
-//   setNumTickets(parseInt(e.target.value));
-// };
-
-// const incrementNumTickets = () => {
-//   setNumTickets(numTickets + 1);
-// };
-
-// const decrementNumTickets = () => {
-//   if (numTickets > 1) {
-//     setNumTickets(numTickets - 1);
-//   }
-// };
-
-
-
-// const handleGetTicket = () => {
-//   if (startLocation === destination) {
-//     toast.error('Start and destination cannot be the same!');
-//     return;
-//   }
-//   // Logic to handle ticket generation or navigation to ticket page
-//   console.log('Start Location:', startLocation);
-//   console.log('Destination:', destination);
-//   console.log('Number of Tickets:', numTickets);
-// };
-
-// return (
-//   <div style={{ backgroundColor: theme.palette.background.default, minHeight: '100vh', color: theme.palette.text.primary }}>
-//     <Grid container spacing={2} style={{ padding: '20px' }}>
-//       <Grid item xs={12}>
-//         <FormControl fullWidth>
-//           <InputLabel id="startLocationLabel" style={{ color: theme.palette.text.primary }}>From:</InputLabel>
-//           <Select
-//             labelId="startLocationLabel"
-//             id="startLocation"
-//             value={startLocation}
-//             label="From"
-//             onChange={handleStartLocationChange}
-//             style={{ color: theme.palette.text.primary }}
-//           >
-//             <MenuItem value="">Select start location</MenuItem>
-//             {menuItems.map((item) => (
-//               <MenuItem key={item.id} value={item.label}>{item.label}</MenuItem>
-//             ))}
-//           </Select>
-//         </FormControl>
-//       </Grid>
-//       <Grid item xs={12}>
-//         <FormControl fullWidth>
-//           <InputLabel id="destinationLabel" style={{ color: theme.palette.text.primary }}>To:</InputLabel>
-//           <Select
-//             labelId="destinationLabel"
-//             id="destination"
-//             value={destination}
-//             label="To"
-//             onChange={handleDestinationChange}
-//             style={{ color: theme.palette.text.primary }}
-//           >
-//             <MenuItem value="">Select destination</MenuItem>
-//             {menuItems.map((item) => (
-//               <MenuItem key={item.id} value={item.label}>{item.label}</MenuItem>
-//             ))}
-//           </Select>
-//         </FormControl>
-//       </Grid>
-//       <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-//         <Button variant="contained" onClick={decrementNumTickets} color="primary" >-</Button>
-//         <TextField
-//           type="number"
-//           id="numTickets"
-//           value={numTickets}
-//           onChange={handleNumTicketsChange}
-//           inputProps={{
-//             min: 1,
-//             style: { textAlign: 'center', color: theme.palette.text.primary }
-//           }}
-//           style={{ margin: '0 10px', color: theme.palette.text.primary }}
-//         />
-//         <Button variant="contained" color="primary" onClick={incrementNumTickets} >+</Button>
-//       </Grid>
-//       {/* pranav */}
-//       <Grid item xs={12}>
-//         <TextField
-//           disabled
-//           id="outlined-disabled"
-//           label="Price"
-//           defaultValue="0 Rs"
-//         />
-
-//       </Grid>
-//       {/* pranav */}
-
-//       <StripeCheckout stripeKey={process.env.REACT_APP_KEY}
-//         token={makePayment}
-//         name='pay money'
-//         amount={product.price * 100}
-//       >
-//         <Grid item xs={12}>
-//           <Button variant="contained" color="primary" fullWidth onClick={handleGetTicket}>Get Ticket at {product.price} </Button>
-//         </Grid>
-//       </StripeCheckout>
-
-//       <ToastContainer />
-//     </Grid>
-
-//   </div>
-// );
-// };
-
-// export default TicketForm;
-
-
-
-
 
 import React, { useState, useEffect } from 'react';
 import { Grid, FormControl, InputLabel, Select, MenuItem, Button, TextField } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { toast, ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import menuItems from './menuItems.json';
+import { useStripe, useElements } from '@stripe/react-stripe-js';
+import axios from 'axios';
 
-import { v4 as uuidv4 } from 'uuid';
 
+const places = [
+  { id: 1, name: 'hyderabad' },
+  { id: 2, name: 'warangal' },
+  { id: 3, name: 'khammam' },
+  { id: 4, name: 'karimnagar' },
+];
 
-import StripeCheckout from "react-stripe-checkout";
+const priceMatrix = {
+  'hyderabad-warangal': 2000,
+  'khammam-karimnagar': 1500,
+  'hyderabad-khammam': 2500,
+  'warangal-karimnagar': 1800,
+  // Add other routes and their prices
+};
 
 const TicketForm = () => {
   const theme = useTheme();
-  const [priceId, setPriceId] = useState('');
 
-
-
-    const makePayment = (token) => {
-
-      if (true) {
-        // Redirect to /qrcode after 6 seconds
-        setTimeout(() => {
-          window.location.href = '/qrcode';
-        }, 6000);
-
-      }
-
-    const body = {
-      token,
-      price: price * 100,
-      priceId,
-    };
-    const headers = {
-      "Content-Type": "application/json",
-    };
-
-    fetch(`http://localhost:1111/payment`, {
-      method: "POST",
-      headers,
-      body: JSON.stringify(body),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("RESPONSE", data);
-        const { status } = data;
-        console.log("status:", status);
-      })
-      .catch((error) => {
-        console.error("Fetch Error:", error);
-      });
-
-  };
-
-  const [price, setPrice] = useState(0);
-
-  const [startLocation, setStartLocation] = useState('');
-  const [destination, setDestination] = useState('');
+  const [startPlace, setStartPlace] = useState('');
+  const [endPlace, setEndPlace] = useState('');
+  const [price, setPrice] = useState(null);
   const [numTickets, setNumTickets] = useState(1);
-
-
+  const stripe = useStripe();
+  const elements = useElements();
 
   useEffect(() => {
-      // const randomNumber = Math.floor(Math.random() * 10000);
-      // const timestamp = Date.now();
-      // const priceId = `${timestamp}_${randomNumber}`;
+      if (startPlace && endPlace) {
+          const route = `${startPlace}-${endPlace}`;
+          const routePrice = priceMatrix[route] || null;
+          setPrice(routePrice);
+      }
+  }, [startPlace, endPlace]);
 
-          const randomPriceId = uuidv4();
-    setPriceId(randomPriceId);
-
-  
-      // Update the state with the generated priceId
-      console.log(priceId);
-      // setPriceId(priceId);
-
-  }, [price]);
-
-  const handleStartLocationChange = (e) => {
-    setStartLocation(e.target.value);
-    updatePrice(e.target.value, destination, numTickets);
+  const handleStartPlaceChange = (e) => {
+      setStartPlace(e.target.value);
   };
 
-  const handleDestinationChange = (e) => {
-    setDestination(e.target.value);
-    updatePrice(startLocation, e.target.value, numTickets);
-  };
-
-  const handleNumTicketsChange = (e) => {
-    setNumTickets(parseInt(e.target.value));
-    updatePrice(startLocation, destination, parseInt(e.target.value));
+  const handleEndPlaceChange = (e) => {
+      setEndPlace(e.target.value);
   };
 
   const incrementNumTickets = () => {
-    setNumTickets(numTickets + 1);
-    updatePrice(startLocation, destination, numTickets + 1);
+      setNumTickets((prev) => prev + 1);
   };
 
   const decrementNumTickets = () => {
-    if (numTickets > 1) {
-      setNumTickets(numTickets - 1);
-      updatePrice(startLocation, destination, numTickets - 1);
-    }
+      if (numTickets > 1) {
+          setNumTickets((prev) => prev - 1);
+      }
   };
 
-  const updatePrice = (startLocation, destination, numTickets) => {
-    
-    // For now, let's set a static price of $10 per ticket
-    const newPrice = 10 * numTickets;
-    setPrice(newPrice);
+  const handleNumTicketsChange = (e) => {
+      const value = Math.max(1, Number(e.target.value));
+      setNumTickets(value);
   };
 
-  const handleGetTicket = () => {
-    if (startLocation === destination) {
-      toast.error('Start and destination cannot be the same!');
-      return;
-    }
-   
+  const handleSubmit = async (event) => {
+      event.preventDefault();
 
-    // Logic to handle ticket generation or navigation to ticket page
-    console.log('Start Location:', startLocation);
-    console.log('Destination:', destination);
-    console.log('Number of Tickets:', numTickets);
-    console.log('Price:', price);
+      if (!stripe || !elements) {
+          return;
+      }
+      try {
+          const { data: { id } } = await axios.post('http://localhost:1111/create-checkout-session', {
+              items: [
+                  { 
+                      name: `${startPlace} to ${endPlace}`, 
+                      price: price * numTickets, 
+                      quantity: numTickets,
+                      startPlace,
+                      endPlace
+                  },
+              ],
+          });
+
+          const { error } = await stripe.redirectToCheckout({ sessionId: id });
+
+          if (error) {
+              console.error(error);
+          }
+      } catch (error) {
+          console.error('Error during payment process:', error);
+      }
   };
+
 
   return (
     <div style={{ backgroundColor: theme.palette.background.default, minHeight: '100vh', color: theme.palette.text.primary }}>
@@ -318,14 +103,14 @@ const TicketForm = () => {
             <Select
               labelId="startLocationLabel"
               id="startLocation"
-              value={startLocation}
+              value={startPlace}
               label="From"
-              onChange={handleStartLocationChange}
+              onChange={handleStartPlaceChange}
               style={{ color: theme.palette.text.primary }}
             >
               <MenuItem value="">Select start location</MenuItem>
-              {menuItems.map((item) => (
-                <MenuItem key={item.id} value={item.label}>{item.label}</MenuItem>
+              {places.map((item) => (
+                <MenuItem key={item.id} value={item.name}>{item.name}</MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -336,15 +121,16 @@ const TicketForm = () => {
             <Select
               labelId="destinationLabel"
               id="destination"
-              value={destination}
+              value={endPlace}
               label="To"
-              onChange={handleDestinationChange}
+              onChange={handleEndPlaceChange}
               style={{ color: theme.palette.text.primary }}
             >
               <MenuItem value="">Select destination</MenuItem>
-              {menuItems.map((item) => (
-                <MenuItem key={item.id} value={item.label}>{item.label}</MenuItem>
+              {places.map((item) => (
+                <MenuItem key={item.id} value={item.name}>{item.name}</MenuItem>
               ))}
+            
             </Select>
           </FormControl>
         </Grid>
@@ -368,24 +154,17 @@ const TicketForm = () => {
             disabled
             id="outlined-disabled"
             label="Price"
-            value={`${price} Rs`}
+            value={`${price * numTickets} Rs`}
           />
         </Grid>
 
 
-
-        <StripeCheckout stripeKey={process.env.REACT_APP_KEY}
-        token={makePayment}
-        name='pay money'
-        amount={price * 100}
-      >
         <Grid item xs={12}>
-          <Button variant="contained" color="primary" fullWidth onClick={handleGetTicket}>Get Ticket at {price} </Button>
+          <Button variant="contained" color="primary" fullWidth onClick={handleSubmit}>Get Ticket at {price * numTickets} </Button>
         </Grid>
-      </StripeCheckout>
 
       <ToastContainer />
-    </Grid>
+      </Grid>
 
 
     </div>
