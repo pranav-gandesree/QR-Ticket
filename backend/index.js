@@ -101,6 +101,30 @@ app.post('/scan-ticket', async (req, res) => {
 });
 
 
+// GET endpoint to retrieve all transactions
+app.get('/transactions', async (req, res) => {
+    try {
+        const transactions = await Transaction.find();
+        res.status(200).json(transactions);
+    } catch (error) {
+        res.status(500).json({ message: 'Error retrieving transactions', error });
+    }
+});
+
+// GET endpoint to retrieve a specific transaction by sessionId
+app.get('/transactions/:sessionId', async (req, res) => {
+    const { sessionId } = req.params;
+    try {
+        const transaction = await Transaction.findOne({ sessionId });
+        if (!transaction) {
+            return res.status(404).json({ message: 'Transaction not found' });
+        }
+        res.status(200).json(transaction);
+    } catch (error) {
+        res.status(500).json({ message: 'Error retrieving transaction', error });
+    }
+});
+
 const PORT = process.env.PORT || 1111
 app.listen(PORT, () => {
     console.log(`App is Listening on PORT ${PORT}`);
