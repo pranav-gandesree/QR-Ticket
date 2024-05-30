@@ -8,22 +8,22 @@ const Success = () => {
     const location = useLocation();
     const session_id = new URLSearchParams(location.search).get('session_id');
 
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
-    useEffect(() => {
-      const timer = setTimeout(() => {
-        navigate('/'); // Redirect to home page after 10 seconds
-      }, 15000); // 15000 milliseconds = 10 seconds
+    // useEffect(() => {
+    //   const timer = setTimeout(() => {
+    //     navigate('/'); // Redirect to home page after 10 seconds
+    //   }, 15000); // 15000 milliseconds = 10 seconds
   
-      return () => clearTimeout(timer); // Cleanup the timer on component unmount
-    }, [navigate]);
+    //   return () => clearTimeout(timer); // Cleanup the timer on component unmount
+    // }, [navigate]);
   
 
     return (
         <>
             <Navbar />
             <div className="qr-container"> 
-                <QRCode value="Ticket confirmed" />
+                <QRCode value={session_id} />
             </div>
         </>
     );

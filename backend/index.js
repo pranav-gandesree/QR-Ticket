@@ -42,6 +42,7 @@ app.post('/create-checkout-session', async (req, res) => {
     const transaction = new Transaction({
         startPlace: items[0].startPlace,
         endPlace: items[0].endPlace,
+        quantity: items[0].quantity,
         price: items[0].price,
         sessionId: session.id,
     });
@@ -56,6 +57,49 @@ app.post('/create-checkout-session', async (req, res) => {
 
     res.json({ id: session.id });
 });
+
+
+
+
+app.post('/scan-ticket', async (req, res) => {
+    const { sessionId } = req.body;
+
+    try {
+        const transaction = await Transaction.findOne({ sessionId });
+
+        if (!transaction) {
+            return res.status(404).json({ message: 'Ticket not found' });
+        }
+
+        if (transaction.status === 'invalid') {
+            return res.status(400).json({ message: 'Ticket is invalid' });
+        }
+
+        if (transaction.scanCount >= 2) {
+            transaction.status = 'invalid';
+            await transaction.save();
+            return res.status(400).json({ message: 'Ticket has already been used twice' });
+        }
+
+        transaction.scanCount += 1;
+
+        if (transaction.scanCount === 1) {
+            transaction.entryTime = new Date();
+        } else if (transaction.scanCount === 2) {
+            transaction.exitTime = new Date();
+        }
+
+        await transaction.save();
+
+        // Logic to open the servo motor
+        // (you would call your specific IoT API here)
+
+        res.status(200).json({ message: 'Ticket scanned successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Ticken scanning failed', error });
+    }
+});
+
 
 const PORT = process.env.PORT || 1111
 app.listen(PORT, () => {

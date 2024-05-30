@@ -20,6 +20,9 @@ const priceMatrix = {
   'khammam-karimnagar': 1500,
   'hyderabad-khammam': 2500,
   'warangal-karimnagar': 1800,
+  'warangal-khammam' : 400,
+  'khammam-warangal': 400,
+
   // Add other routes and their prices
 };
 
@@ -38,6 +41,7 @@ const TicketForm = () => {
           const route = `${startPlace}-${endPlace}`;
           const routePrice = priceMatrix[route] || null;
           setPrice(routePrice);
+    
       }
   }, [startPlace, endPlace]);
 
@@ -51,6 +55,7 @@ const TicketForm = () => {
 
   const incrementNumTickets = () => {
       setNumTickets((prev) => prev + 1);
+     
   };
 
   const decrementNumTickets = () => {
@@ -63,6 +68,8 @@ const TicketForm = () => {
       const value = Math.max(1, Number(e.target.value));
       setNumTickets(value);
   };
+
+
 
   const handleSubmit = async (event) => {
       event.preventDefault();

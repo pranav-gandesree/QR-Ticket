@@ -14,6 +14,10 @@ const TransactionSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  quantity: {
+    type: Number,
+    default: 0,
+  },
   sessionId: {
     type: String,
     required: true,
@@ -22,6 +26,14 @@ const TransactionSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  scanCount: { type: Number, default: 0 },
+  entryTime: Date,
+  exitTime: Date,
+  status: { type: String, enum: ['valid', 'invalid'], default: 'valid' }
+  
+
 });
 
-module.exports = mongoose.model('Transaction', TransactionSchema);
+const Transaction = mongoose.model('Transaction', transactionSchema);
+
+module.exports = Transaction;
