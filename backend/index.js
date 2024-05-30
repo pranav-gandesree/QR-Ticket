@@ -34,8 +34,8 @@ app.post('/create-checkout-session', async (req, res) => {
             quantity: item.quantity,
         })),
         mode: 'payment',
-        success_url: 'http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}',
-        cancel_url: 'http://localhost:3000/cancel',
+        success_url: 'https://qrticket.netlify.app/success?session_id={CHECKOUT_SESSION_ID}',
+        cancel_url: 'https://qrticket.netlify.app/cancel',
     });
 
     // Save transaction details to MongoDB
