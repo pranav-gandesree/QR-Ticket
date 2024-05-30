@@ -1,9 +1,12 @@
 const mongoose = require('mongoose');
 
-const connectDB = async()=>{
-    return mongoose.connect('mongodb+srv://pranav8267:KpaO4sbRzsT3cc69@cluster0.swcsww6.mongodb.net/qrcodes')
-    .then(()=>{console.log('connected to databse')})
-    .catch((err)=>{console.log(err)});
-}
+const connectDB = async () => {
+    try {
+        await mongoose.connect(process.env.MONGO_URL);
+        console.log('Connected to database');
+    } catch (err) {
+        console.error('Database connection error:', err);
+    }
+};
 
 module.exports = connectDB;
